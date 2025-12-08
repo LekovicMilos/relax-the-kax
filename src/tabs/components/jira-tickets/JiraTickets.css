@@ -1,0 +1,255 @@
+/* Main wrapper for all sections */
+.jira-tickets-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 500px;
+  width: 100%;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section container */
+.jira-section {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* In Progress section - highlighted */
+.jira-section-progress {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 24px rgba(59, 130, 246, 0.15);
+}
+
+/* To Do / Up Next section - subtle gray */
+.jira-section-todo {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Section header */
+.jira-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jira-section-icon {
+  font-size: 20px;
+}
+
+.jira-section-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  flex: 1;
+  text-shadow: none;
+}
+
+.jira-count {
+  background: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.jira-count-todo {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Tickets list */
+.jira-tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px; /* Space for hover effect */
+}
+
+.jira-tickets-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.jira-tickets-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.jira-tickets-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* Ticket card */
+.jira-ticket-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  border-left: 3px solid #3b82f6;
+}
+
+.jira-ticket-card:hover {
+  transform: translateX(4px);
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* To Do ticket card - gray left border */
+.jira-ticket-card.ticket-todo {
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+.jira-ticket-card.ticket-todo:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Ticket key row */
+.jira-ticket-key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jira-type {
+  font-size: 14px;
+}
+
+.jira-key-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
+}
+
+.jira-priority-dot {
+  margin-left: auto;
+  font-size: 10px;
+}
+
+/* Ticket summary */
+.jira-ticket-summary {
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  text-shadow: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Status badge */
+.jira-ticket-status {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.status-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+}
+
+.status-badge.status-todo {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Loading state */
+.jira-tickets-container {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.jira-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.jira-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.jira-error {
+  padding: 20px;
+  text-align: center;
+  color: #ffb3b3;
+  font-size: 13px;
+}
+
+/* Empty state */
+.jira-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.jira-empty span {
+  font-size: 40px;
+}
+
+.jira-empty p {
+  margin: 0;
+  font-size: 16px;
+}

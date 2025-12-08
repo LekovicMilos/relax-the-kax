@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Relax the Kax",
+  "description": "New tab extension with Jira integration",
+  "version": "1.0.8",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Relax the Kax",
+    "default_icon": "icon.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newTab.html"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://*.atlassian.net/*",
+    "https://*.atlassian.com/*",
+    "https://*.jira.com/*",
+    "https://picsum.photos/*"
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
