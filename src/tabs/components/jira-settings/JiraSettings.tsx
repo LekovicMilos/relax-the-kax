@@ -14,9 +14,15 @@ interface JiraSettingsProps {
   onSave?: () => void;
   onClose?: () => void;
   isConfigured: boolean;
+  embedded?: boolean; // When true, hides title and close button
 }
 
-const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigured }) => {
+const JiraSettings: React.FC<JiraSettingsProps> = ({ 
+  onSave, 
+  onClose, 
+  isConfigured,
+  embedded = false,
+}) => {
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [domain, setDomain] = useState("");
@@ -125,29 +131,48 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
   };
 
   return (
-    <div className="jira-settings">
-      {/* Close button for modal */}
-      {isConfigured && onClose && (
+    <div className={`jira-settings ${embedded ? 'jira-settings-embedded' : ''}`}>
+      {/* Close button for modal - only when not embedded */}
+      {!embedded && isConfigured && onClose && (
         <button className="jira-close-btn" onClick={onClose}>
           ✕
         </button>
       )}
       
-      <h3 className="jira-settings-title">
-        {isConfigured ? "Jira Settings" : "Connect to Jira"}
-      </h3>
-      <p className="jira-settings-description">
-        Enter your Jira credentials to see your In Progress tickets.
-        <br />
-        <a 
-          href="https://id.atlassian.com/manage-profile/security/api-tokens" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className="jira-help-link"
-        >
-          Get your API token here →
-        </a>
-      </p>
+      {/* Title and description - only when not embedded */}
+      {!embedded && (
+        <>
+          <h3 className="jira-settings-title">
+            {isConfigured ? "Jira Settings" : "Connect to Jira"}
+          </h3>
+          <p className="jira-settings-description">
+            Enter your Jira credentials to see your In Progress tickets.
+            <br />
+            <a 
+              href="https://id.atlassian.com/manage-profile/security/api-tokens" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="jira-help-link"
+            >
+              Get your API token here →
+            </a>
+          </p>
+        </>
+      )}
+
+      {/* Help link when embedded */}
+      {embedded && (
+        <p className="jira-settings-description">
+          <a 
+            href="https://id.atlassian.com/manage-profile/security/api-tokens" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="jira-help-link"
+          >
+            Get your API token here →
+          </a>
+        </p>
+      )}
       
       <div className="jira-form">
         <div className="jira-input-group">

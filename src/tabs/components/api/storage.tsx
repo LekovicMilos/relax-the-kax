@@ -189,6 +189,30 @@ export const getJiraStatusPreferences = (): Promise<string[]> => {
 };
 
 // ============================================
+// User Name
+// ============================================
+
+/**
+ * Save user's display name
+ */
+export const saveUserName = (name: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.set({ user_name: name }, () => resolve(true));
+  });
+};
+
+/**
+ * Get user's display name
+ */
+export const getUserName = (): Promise<string> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get({ user_name: "" }, (result) => {
+      resolve(result.user_name);
+    });
+  });
+};
+
+// ============================================
 // General Storage (Photos cache)
 // ============================================
 

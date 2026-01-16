@@ -26,12 +26,21 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   text-shadow: none;
   z-index: 10;
+}
+
+.branding-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
 }
 
 .background {
@@ -185,7 +194,43 @@
   font-size: 11px;
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  left: 48px;
+}
+
+/* Photo refresh button */
+.photo-refresh-btn {
+  position: fixed;
+  bottom: 18px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 10;
+}
+
+.photo-refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.photo-refresh-btn:active {
+  transform: rotate(180deg);
+}
+
+.photo-refresh-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
 .photo-info {

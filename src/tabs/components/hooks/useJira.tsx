@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { fetchTicketsByPreferences, getJiraUserName, JiraTicket } from "../api/jira";
+import { fetchTicketsByPreferences, JiraTicket } from "../api/jira";
 import { hasJiraCredentials } from "../api/storage";
 
 interface UseJiraReturn {
@@ -7,7 +7,6 @@ interface UseJiraReturn {
   loading: boolean;
   error: string | null;
   isConfigured: boolean;
-  userName: string | null;
   refetch: () => void;
 }
 
@@ -20,7 +19,6 @@ function useJira(): UseJiraReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isConfigured, setIsConfigured] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -35,13 +33,7 @@ function useJira(): UseJiraReturn {
         return;
       }
 
-      // Fetch user name and tickets based on preferences
-      const [name, ticketResults] = await Promise.all([
-        getJiraUserName(),
-        fetchTicketsByPreferences(),
-      ]);
-
-      setUserName(name);
+      const ticketResults = await fetchTicketsByPreferences();
       setTickets(ticketResults);
       
     } catch (err) {
@@ -60,7 +52,6 @@ function useJira(): UseJiraReturn {
     loading,
     error,
     isConfigured,
-    userName,
     refetch: fetchData,
   };
 }

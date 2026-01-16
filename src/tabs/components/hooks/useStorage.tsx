@@ -81,7 +81,12 @@ function useStorage() {
     }
   };
 
-  return { photo };
+  // Manual refresh function
+  const refreshPhotos = async () => {
+    await fetchNewPhotos();
+  };
+
+  return { photo, refreshPhotos };
 }
 
 export default useStorage;

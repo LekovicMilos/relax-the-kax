@@ -11,6 +11,17 @@
   animation: slideUp 0.3s ease-out;
 }
 
+/* Embedded mode - remove background and shadow */
+.jira-settings.jira-settings-embedded {
+  background: transparent;
+  backdrop-filter: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  animation: none;
+  max-width: none;
+}
+
 .jira-close-btn {
   position: absolute;
   top: 12px;
@@ -57,6 +68,10 @@
   font-size: 14px;
   color: #666;
   line-height: 1.5;
+}
+
+.jira-settings-embedded .jira-settings-description {
+  margin-bottom: 16px;
 }
 
 .jira-help-link {
@@ -199,38 +214,46 @@
   text-align: center;
 }
 
-/* Compact view when already configured */
-.jira-settings-compact {
+/* Status Checkboxes */
+.jira-status-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.jira-checkbox-label {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  position: fixed;
-  top: 20px;
-  right: 20px;
-}
-
-.jira-connected {
-  font-size: 13px;
-  color: #90EE90;
-  font-weight: 500;
-}
-
-.jira-edit-btn {
-  padding: 4px 12px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  font-size: 12px;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s;
+  font-size: 13px;
+  font-weight: 400;
 }
 
-.jira-edit-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+.jira-checkbox-label:hover {
+  border-color: #0052cc;
+  background: #f0f7ff;
 }
 
+.jira-checkbox-label:has(.jira-checkbox:checked) {
+  background: #e6f0ff;
+  border-color: #0052cc;
+}
+
+.jira-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #0052cc;
+  cursor: pointer;
+}
+
+.jira-checkbox-text {
+  color: #333;
+  user-select: none;
+}
