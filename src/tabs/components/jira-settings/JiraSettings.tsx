@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { saveJiraCredentials, getJiraCredentials, clearJiraCredentials, isValidJiraDomain } from "../api/storage";
+import { 
+  saveJiraCredentials, 
+  getJiraCredentials, 
+  clearJiraCredentials, 
+  isValidJiraDomain,
+  saveJiraStatusPreferences,
+  getJiraStatusPreferences,
+  JIRA_STATUS_OPTIONS
+} from "../api/storage";
 import "./JiraSettings.css";
 
 interface JiraSettingsProps {
@@ -15,9 +23,11 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
   const [isSaved, setIsSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [domainError, setDomainError] = useState(false);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>(["in_progress"]);
 
   useEffect(() => {
     loadCredentials();
+    loadStatusPreferences();
   }, []);
 
   const loadCredentials = async () => {
@@ -26,6 +36,22 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
     if (creds.jira_domain) setDomain(creds.jira_domain);
     // Don't load token for security - show placeholder
     if (creds.jira_token) setToken("••••••••••••••••");
+  };
+
+  const loadStatusPreferences = async () => {
+    const statuses = await getJiraStatusPreferences();
+    setSelectedStatuses(statuses);
+  };
+
+  const handleStatusToggle = (statusId: string) => {
+    setSelectedStatuses(prev => {
+      if (prev.includes(statusId)) {
+        // Don't allow unchecking all statuses
+        if (prev.length === 1) return prev;
+        return prev.filter(s => s !== statusId);
+      }
+      return [...prev, statusId];
+    });
   };
 
   const validateDomain = (value: string) => {
@@ -72,6 +98,9 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
       setError(result.error || "Failed to save");
       return;
     }
+
+    // Save status preferences
+    await saveJiraStatusPreferences(selectedStatuses);
     
     setIsSaved(true);
     
@@ -166,6 +195,24 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
             }}
             className="jira-input"
           />
+        </div>
+
+        {/* Status Selection */}
+        <div className="jira-input-group">
+          <label>Show tickets with status:</label>
+          <div className="jira-status-checkboxes">
+            {JIRA_STATUS_OPTIONS.map(status => (
+              <label key={status.id} className="jira-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={selectedStatuses.includes(status.id)}
+                  onChange={() => handleStatusToggle(status.id)}
+                  className="jira-checkbox"
+                />
+                <span className="jira-checkbox-text">{status.label}</span>
+              </label>
+            ))}
+          </div>
         </div>
         
         {error && (

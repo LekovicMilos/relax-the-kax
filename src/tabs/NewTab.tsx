@@ -10,7 +10,7 @@ import useStorage from "./components/hooks/useStorage";
 
 const NewTab: React.FC = () => {
   const { photo } = useStorage();
-  const { tickets, todoTickets, loading, error, isConfigured, userName, refetch } = useJira();
+  const { tickets, loading, error, isConfigured, userName, refetch } = useJira();
   const { 
     events: calendarEvents, 
     loading: calendarLoading, 
@@ -115,7 +115,6 @@ const NewTab: React.FC = () => {
               <div className="tickets-container">
                 <JiraTickets 
                   tickets={tickets} 
-                  todoTickets={todoTickets}
                   loading={loading} 
                   error={error || undefined}
                 />

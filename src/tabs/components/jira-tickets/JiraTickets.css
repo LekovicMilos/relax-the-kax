@@ -184,6 +184,11 @@
   padding: 3px 8px;
   border-radius: 4px;
   font-weight: 600;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status-badge.status-progress {
   background: rgba(59, 130, 246, 0.25);
   color: #93c5fd;
 }
@@ -191,6 +196,16 @@
 .status-badge.status-todo {
   background: rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.7);
+}
+
+.status-badge.status-done {
+  background: rgba(34, 197, 94, 0.25);
+  color: #86efac;
+}
+
+.status-badge.status-blocked {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
 }
 
 /* Loading state */

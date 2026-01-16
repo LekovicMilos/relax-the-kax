@@ -4,12 +4,11 @@ import "./JiraTickets.css";
 
 interface JiraTicketsProps {
   tickets: JiraTicket[];
-  todoTickets?: JiraTicket[];
   loading?: boolean;
   error?: string;
 }
 
-const JiraTickets: React.FC<JiraTicketsProps> = ({ tickets, todoTickets = [], loading, error }) => {
+const JiraTickets: React.FC<JiraTicketsProps> = ({ tickets, loading, error }) => {
   if (loading) {
     return (
       <div className="jira-tickets-container">
@@ -31,40 +30,28 @@ const JiraTickets: React.FC<JiraTicketsProps> = ({ tickets, todoTickets = [], lo
     );
   }
 
-  // If no In Progress tickets, show first 2 To Do tickets
-  const hasInProgress = tickets && tickets.length > 0;
-  const showTodoFallback = !hasInProgress && todoTickets && todoTickets.length > 0;
-
-  if (!hasInProgress && !showTodoFallback) {
+  if (!tickets || tickets.length === 0) {
     return (
       <div className="jira-tickets-container">
         <div className="jira-empty">
           <span>🎉</span>
-          <p>No active tickets</p>
+          <p>No tickets found</p>
         </div>
       </div>
     );
   }
 
-  // Show In Progress if available, otherwise show first 2 To Do
-  const displayTickets = hasInProgress ? tickets : todoTickets.slice(0, 2);
-  const sectionTitle = hasInProgress ? "In Progress" : "Up Next";
-  const sectionIcon = hasInProgress ? "🔥" : "📋";
-  const isTodoSection = !hasInProgress;
-
   return (
     <div className="jira-tickets-wrapper">
-      <div className={`jira-section ${isTodoSection ? 'jira-section-todo' : 'jira-section-progress'}`}>
+      <div className="jira-section jira-section-progress">
         <div className="jira-section-header">
-          <span className="jira-section-icon">{sectionIcon}</span>
-          <h3>{sectionTitle}</h3>
-          <span className={`jira-count ${isTodoSection ? 'jira-count-todo' : ''}`}>
-            {displayTickets.length}
-          </span>
+          <span className="jira-section-icon">📋</span>
+          <h3>My Tickets</h3>
+          <span className="jira-count">{tickets.length}</span>
         </div>
         <div className="jira-tickets-list">
-          {displayTickets.map((ticket) => (
-            <TicketCard key={ticket.id} ticket={ticket} isTodo={isTodoSection} />
+          {tickets.map((ticket) => (
+            <TicketCard key={ticket.id} ticket={ticket} />
           ))}
         </div>
       </div>
@@ -73,13 +60,24 @@ const JiraTickets: React.FC<JiraTicketsProps> = ({ tickets, todoTickets = [], lo
 };
 
 // Individual ticket card component
-const TicketCard: React.FC<{ ticket: JiraTicket; isTodo?: boolean }> = ({ ticket, isTodo }) => {
+const TicketCard: React.FC<{ ticket: JiraTicket }> = ({ ticket }) => {
+  // Determine status color based on status category
+  const getStatusClass = () => {
+    const status = ticket.status.toLowerCase();
+    const category = ticket.statusCategory?.toLowerCase() || "";
+    
+    if (category === "done" || status === "done") return "status-done";
+    if (category === "in progress" || status.includes("progress") || status.includes("review")) return "status-progress";
+    if (status === "blocked") return "status-blocked";
+    return "status-todo";
+  };
+
   return (
     <a
       href={ticket.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`jira-ticket-card ${isTodo ? 'ticket-todo' : ''}`}
+      className="jira-ticket-card"
     >
       <div className="jira-ticket-key">
         {ticket.issueType && (
@@ -96,7 +94,7 @@ const TicketCard: React.FC<{ ticket: JiraTicket; isTodo?: boolean }> = ({ ticket
       </div>
       <div className="jira-ticket-summary">{ticket.summary}</div>
       <div className="jira-ticket-status">
-        <span className={`status-badge ${isTodo ? 'status-todo' : ''}`}>
+        <span className={`status-badge ${getStatusClass()}`}>
           {ticket.status}
         </span>
       </div>

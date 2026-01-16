@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { fetchInProgressTickets, fetchToDoTickets, getJiraUserName, JiraTicket } from "../api/jira";
+import { fetchTicketsByPreferences, getJiraUserName, JiraTicket } from "../api/jira";
 import { hasJiraCredentials } from "../api/storage";
 
 interface UseJiraReturn {
   tickets: JiraTicket[];
-  todoTickets: JiraTicket[];
   loading: boolean;
   error: string | null;
   isConfigured: boolean;
@@ -14,10 +13,10 @@ interface UseJiraReturn {
 
 /**
  * Hook for fetching and managing Jira tickets
+ * Uses user's status preferences to filter tickets
  */
 function useJira(): UseJiraReturn {
   const [tickets, setTickets] = useState<JiraTicket[]>([]);
-  const [todoTickets, setTodoTickets] = useState<JiraTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isConfigured, setIsConfigured] = useState(false);
@@ -36,16 +35,14 @@ function useJira(): UseJiraReturn {
         return;
       }
 
-      // Fetch all data in parallel
-      const [name, inProgress, toDo] = await Promise.all([
+      // Fetch user name and tickets based on preferences
+      const [name, ticketResults] = await Promise.all([
         getJiraUserName(),
-        fetchInProgressTickets(),
-        fetchToDoTickets(),
+        fetchTicketsByPreferences(),
       ]);
 
       setUserName(name);
-      setTickets(inProgress);
-      setTodoTickets(toDo);
+      setTickets(ticketResults);
       
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch tickets");
@@ -60,7 +57,6 @@ function useJira(): UseJiraReturn {
 
   return {
     tickets,
-    todoTickets,
     loading,
     error,
     isConfigured,

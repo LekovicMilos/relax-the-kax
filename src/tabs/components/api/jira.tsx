@@ -4,7 +4,7 @@
  */
 
 import { encodeBase64 } from "../utils/string";
-import { getJiraCredentials, JiraCredentials } from "./storage";
+import { getJiraCredentials, JiraCredentials, getJiraStatusPreferences, JIRA_STATUS_OPTIONS } from "./storage";
 
 // ============================================
 // Types
@@ -192,4 +192,46 @@ export const testJiraConnection = async (): Promise<{ success: boolean; message:
     return { success: true, message: `Connected as ${user.displayName}` };
   }
   return { success: false, message: "Authentication failed" };
+};
+
+/**
+ * Fetch tickets based on user's selected status preferences
+ */
+export const fetchTicketsByPreferences = async (): Promise<JiraTicket[]> => {
+  const creds = await getJiraCredentials();
+  if (!creds.jira_email || !creds.jira_token || !creds.jira_domain) {
+    return [];
+  }
+
+  const baseUrl = getBaseUrl(creds);
+  const selectedStatuses = await getJiraStatusPreferences();
+  
+  // Build JQL from selected statuses
+  const statusConditions = selectedStatuses
+    .map(statusId => {
+      const option = JIRA_STATUS_OPTIONS.find(o => o.id === statusId);
+      return option ? `(${option.jql})` : null;
+    })
+    .filter(Boolean);
+
+  if (statusConditions.length === 0) {
+    return [];
+  }
+
+  const statusJql = statusConditions.join(" OR ");
+
+  // Try with email first
+  let jql = `assignee = "${creds.jira_email}" AND (${statusJql}) ORDER BY updated DESC`;
+  let tickets = await searchTickets(creds, baseUrl, jql);
+
+  // Fallback to accountId if email didn't work
+  if (tickets.length === 0) {
+    const user = await getCurrentUser(creds, baseUrl);
+    if (user) {
+      jql = `assignee = "${user.accountId}" AND (${statusJql}) ORDER BY updated DESC`;
+      tickets = await searchTickets(creds, baseUrl, jql);
+    }
+  }
+
+  return tickets;
 };

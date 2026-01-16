@@ -149,6 +149,46 @@ export const clearJiraCredentials = (): Promise<boolean> => {
 };
 
 // ============================================
+// Jira Status Preferences
+// ============================================
+
+export interface JiraStatusPreferences {
+  statuses: string[];
+}
+
+// Available status options
+export const JIRA_STATUS_OPTIONS = [
+  { id: "in_progress", label: "In Progress", jql: 'status = "In Progress"' },
+  { id: "to_do", label: "To Do", jql: 'statusCategory = "To Do"' },
+  { id: "in_review", label: "In Review", jql: 'status = "In Review"' },
+  { id: "code_review", label: "Code Review", jql: 'status = "Code Review"' },
+  { id: "blocked", label: "Blocked", jql: 'status = "Blocked"' },
+  { id: "done_today", label: "Done Today", jql: 'status = "Done" AND updated >= startOfDay()' },
+];
+
+const DEFAULT_STATUSES = ["in_progress"];
+
+/**
+ * Save Jira status preferences
+ */
+export const saveJiraStatusPreferences = (statuses: string[]): Promise<boolean> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.set({ jira_statuses: statuses }, () => resolve(true));
+  });
+};
+
+/**
+ * Get Jira status preferences
+ */
+export const getJiraStatusPreferences = (): Promise<string[]> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get({ jira_statuses: DEFAULT_STATUSES }, (result) => {
+      resolve(result.jira_statuses);
+    });
+  });
+};
+
+// ============================================
 // General Storage (Photos cache)
 // ============================================
 
