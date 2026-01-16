@@ -65,7 +65,7 @@ function useStorage() {
           author: hit.user,
         }));
 
-        const newDate = moment().format("YYYY MM DD");
+        const newDate = moment().format("YYYY-MM-DD");
 
         // Save to storage
         await saveToStorage({
@@ -76,8 +76,8 @@ function useStorage() {
         setDate(newDate);
         selectRandomPhoto(photos);
       }
-    } catch (error) {
-      console.error("Failed to fetch photos:", error);
+    } catch {
+      // Silent fail - photo fetch error
     }
   };
 

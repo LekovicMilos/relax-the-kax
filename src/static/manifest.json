@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Relax the Kax",
-  "description": "New tab extension with Jira integration",
-  "version": "1.0.8",
+  "description": "New tab extension with Jira and Google Calendar integration",
+  "version": "1.0.9",
   "action": {
     "default_popup": "popup.html",
     "default_title": "Relax the Kax",
@@ -11,13 +11,18 @@
   "chrome_url_overrides": {
     "newtab": "newTab.html"
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "identity"],
   "host_permissions": [
     "https://*.atlassian.net/*",
     "https://*.atlassian.com/*",
     "https://*.jira.com/*",
-    "https://picsum.photos/*"
+    "https://picsum.photos/*",
+    "https://www.googleapis.com/*"
   ],
+  "oauth2": {
+    "client_id": "9481733180-49l235ujg3ifn6dvtumvjl6n8kl29296.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/calendar.readonly"]
+  },
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
@@ -31,3 +36,4 @@
     "extension_pages": "script-src 'self'; object-src 'self';"
   }
 }
+

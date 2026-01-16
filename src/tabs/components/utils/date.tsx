@@ -8,6 +8,6 @@ export const isADayAgo = (date: string): boolean => {
   if (date === "") {
     return true;
   }
-  const yesterday = moment().subtract(1, "days").format("YYYY MM DD");
-  return moment(date).isBefore(moment(yesterday));
+  const yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
+  return moment(date, "YYYY-MM-DD").isBefore(moment(yesterday, "YYYY-MM-DD"));
 };

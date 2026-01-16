@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { saveJiraCredentials, getJiraCredentials } from "../api/storage";
+import { saveJiraCredentials, getJiraCredentials, clearJiraCredentials, isValidJiraDomain } from "../api/storage";
 import "./JiraSettings.css";
 
 interface JiraSettingsProps {
@@ -13,6 +13,8 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
   const [token, setToken] = useState("");
   const [domain, setDomain] = useState("");
   const [isSaved, setIsSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [domainError, setDomainError] = useState(false);
 
   useEffect(() => {
     loadCredentials();
@@ -26,12 +28,29 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
     if (creds.jira_token) setToken("••••••••••••••••");
   };
 
+  const validateDomain = (value: string) => {
+    if (value && !isValidJiraDomain(value)) {
+      setDomainError(true);
+    } else {
+      setDomainError(false);
+    }
+  };
+
   const handleSave = async () => {
+    setError(null);
+    
     // Only save if token doesn't look like the placeholder
     const tokenToSave = token === "••••••••••••••••" ? "" : token;
     
     if (!email || !domain) {
-      alert("Please fill in email and domain");
+      setError("Please fill in email and domain");
+      return;
+    }
+
+    // Validate domain format
+    if (!isValidJiraDomain(domain)) {
+      setError("Invalid Jira domain. Use format: company.atlassian.net");
+      setDomainError(true);
       return;
     }
 
@@ -43,11 +62,17 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
     }
 
     if (!finalToken) {
-      alert("Please enter your API token");
+      setError("Please enter your API token");
       return;
     }
 
-    await saveJiraCredentials(email, finalToken, domain);
+    const result = await saveJiraCredentials(email, finalToken, domain);
+    
+    if (!result.success) {
+      setError(result.error || "Failed to save");
+      return;
+    }
+    
     setIsSaved(true);
     
     setTimeout(() => {
@@ -56,6 +81,18 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
         onSave();
       }
     }, 1500);
+  };
+
+  const handleDisconnect = async () => {
+    if (confirm("Are you sure you want to disconnect from Jira? Your credentials will be removed.")) {
+      await clearJiraCredentials();
+      setEmail("");
+      setToken("");
+      setDomain("");
+      if (onSave) {
+        onSave();
+      }
+    }
   };
 
   return (
@@ -91,9 +128,17 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
             type="text"
             placeholder="your-company.atlassian.net"
             value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-            className="jira-input"
+            onChange={(e) => {
+              setDomain(e.target.value);
+              validateDomain(e.target.value);
+            }}
+            className={`jira-input ${domainError ? 'jira-input-error' : ''}`}
           />
+          {domainError && (
+            <span className="jira-field-error">
+              Use format: company.atlassian.net
+            </span>
+          )}
         </div>
         
         <div className="jira-input-group">
@@ -123,10 +168,21 @@ const JiraSettings: React.FC<JiraSettingsProps> = ({ onSave, onClose, isConfigur
           />
         </div>
         
+        {error && (
+          <div className="jira-error-message">
+            ⚠️ {error}
+          </div>
+        )}
+        
         <div className="jira-buttons">
           <button onClick={handleSave} className="jira-save-btn">
             Save
           </button>
+          {isConfigured && (
+            <button onClick={handleDisconnect} className="jira-disconnect-btn">
+              Disconnect
+            </button>
+          )}
         </div>
         
         {isSaved && (

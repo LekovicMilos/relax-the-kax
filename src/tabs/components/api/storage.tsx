@@ -35,11 +35,39 @@ export interface JiraCredentials {
  * Save Jira credentials with encryption
  * Token is encrypted before storage for security
  */
+/**
+ * Validate Jira domain format
+ * Accepts: company.atlassian.net, company.jira.com, or custom domains
+ */
+export const isValidJiraDomain = (domain: string): boolean => {
+  if (!domain) return false;
+  
+  // Remove protocol if present
+  const cleanDomain = domain.replace(/^https?:\/\//, '').toLowerCase();
+  
+  // Check for valid Atlassian domains
+  const validPatterns = [
+    /^[\w-]+\.atlassian\.net$/,
+    /^[\w-]+\.atlassian\.com$/,
+    /^[\w-]+\.jira\.com$/,
+  ];
+  
+  return validPatterns.some(pattern => pattern.test(cleanDomain));
+};
+
 export const saveJiraCredentials = async (
   email: string,
   token: string,
   domain: string
-): Promise<boolean> => {
+): Promise<{ success: boolean; error?: string }> => {
+  // Validate domain before saving
+  if (!isValidJiraDomain(domain)) {
+    return { 
+      success: false, 
+      error: "Invalid Jira domain. Use format: company.atlassian.net" 
+    };
+  }
+
   try {
     // Encrypt sensitive data
     const encryptedToken = await encrypt(token);
@@ -50,14 +78,13 @@ export const saveJiraCredentials = async (
         {
           jira_email: encryptedEmail,
           jira_token: encryptedToken,
-          jira_domain: domain, // Domain is not sensitive
+          jira_domain: domain.replace(/^https?:\/\//, ''), // Store clean domain
         },
-        () => resolve(true)
+        () => resolve({ success: true })
       );
     });
-  } catch (error) {
-    console.error("Failed to save credentials:", error);
-    return false;
+  } catch {
+    return { success: false, error: "Failed to save credentials" };
   }
 };
 
@@ -88,9 +115,8 @@ export const getJiraCredentials = async (): Promise<JiraCredentials> => {
             jira_token: token,
             jira_domain: domain,
           });
-        } catch (error) {
-          console.error("Failed to decrypt credentials:", error);
-          // Return empty on decryption failure
+        } catch {
+          // Return empty on decryption failure (silent fail)
           resolve({
             jira_email: "",
             jira_token: "",

@@ -94,8 +94,8 @@ const searchTickets = async (
 
     const data = await response.json();
     return (data.issues || []).map((issue: any) => mapIssueToTicket(issue, baseUrl));
-  } catch (error) {
-    console.error("Search failed:", error);
+  } catch {
+    // Silent fail - network or parsing error
     return [];
   }
 };

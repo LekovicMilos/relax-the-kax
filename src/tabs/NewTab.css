@@ -113,6 +113,30 @@
   font-weight: bold;
 }
 
+/* Calendar status indicator */
+.calendar-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.calendar-logo {
+  width: 18px;
+  height: 18px;
+  color: #4285F4;
+}
+
+.calendar-check {
+  font-size: 12px;
+  color: #4ade80;
+  font-weight: bold;
+}
+
 /* Settings button */
 .settings-button {
   display: flex;
@@ -325,10 +349,25 @@ a:hover {
   margin: 0 0 16px 0;
 }
 
-/* Tickets container */
-.tickets-container {
+/* Content panels - side by side layout */
+.content-panels {
+  display: flex;
+  gap: 24px;
   margin-top: 20px;
   animation: fadeIn 0.5s ease-out;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Tickets container */
+.tickets-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Calendar container */
+.calendar-container {
+  animation: fadeIn 0.5s ease-out 0.1s backwards;
 }
 
 .tickets-debug {
