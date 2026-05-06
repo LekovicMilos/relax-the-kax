@@ -16,7 +16,6 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> & {
   Background: React.FC<{ photo: Photo | null }>;
   ImageLink: React.FC<{ photo: Photo | null }>;
-  Name: React.FC<{ name: string }>;
 } = ({ children }) => {
   return <div className="layout">{children}</div>;
 };
@@ -47,11 +46,6 @@ Layout.ImageLink = ({ photo }) => {
       Photo{photo.author ? ` by ${photo.author}` : ""} from Picsum
     </a>
   );
-};
-
-// User name greeting component
-Layout.Name = ({ name }) => {
-  return <div className="welcome">Hello{name && `, ${name}`}!</div>;
 };
 
 export default Layout;

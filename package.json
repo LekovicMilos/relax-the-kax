@@ -1,12 +1,12 @@
 {
   "name": "relax-the-kax",
   "author": "Milos Lekovic",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "watch": "webpack --watch --progress --config webpack.dev.js",
-    "build": "webpack --watch --progress --config webpack.prod.js"
+    "build": "webpack --progress --config webpack.prod.js"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.304",

@@ -200,36 +200,3 @@ export const fetchTodayEvents = async (): Promise<CalendarEvent[]> => {
     return [];
   }
 };
-
-/**
- * Get user's Google profile info
- */
-export const getGoogleUserInfo = async (): Promise<{ name: string; email: string } | null> => {
-  const token = await getAuthToken(false);
-  if (!token) {
-    return null;
-  }
-
-  try {
-    const response = await fetch(
-      "https://www.googleapis.com/oauth2/v2/userinfo",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return {
-      name: data.name || data.given_name || "User",
-      email: data.email || "",
-    };
-  } catch {
-    return null;
-  }
-};
