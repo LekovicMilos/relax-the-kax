@@ -131,10 +131,27 @@ export const authenticateGoogle = async (): Promise<boolean> => {
 };
 
 /**
- * Sign out from Google Calendar
+ * Sign out from Google Calendar.
+ * Revokes the OAuth grant at Google first, then clears Chrome's token cache.
+ * Without the revoke, Chrome would silently re-issue a token on the next
+ * non-interactive getAuthToken call because the grant is still active.
  */
 export const signOutGoogle = async (): Promise<void> => {
-  await removeCachedAuthToken();
+  const token = await getAuthToken(false);
+  if (!token) return;
+
+  try {
+    await fetch(`https://oauth2.googleapis.com/revoke?token=${encodeURIComponent(token)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+  } catch {
+    // Even if revoke fails (network), still clear local cache below.
+  }
+
+  await new Promise<void>((resolve) => {
+    chrome.identity.removeCachedAuthToken({ token }, () => resolve());
+  });
 };
 
 /**

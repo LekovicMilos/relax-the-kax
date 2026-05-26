@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./NewTab.css";
 import Layout from "./components/Layout";
-import JiraSettings from "./components/jira-settings";
 import JiraTickets from "./components/jira-tickets";
 import CalendarEvents from "./components/calendar-events";
 import Settings from "./components/settings";
@@ -40,21 +39,19 @@ const NewTab: React.FC = () => {
     <div className="App">
       <Layout.Background photo={photo} />
       
-      {/* Top right corner - Settings button only */}
-      {isConfigured && (
-        <div className="top-right-controls">
-          <button 
-            className="settings-button"
-            onClick={() => setShowSettings(true)}
-            title="Settings"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-          </button>
-        </div>
-      )}
+      {/* Top right corner - Settings button (always visible) */}
+      <div className="top-right-controls">
+        <button
+          className="settings-button"
+          onClick={() => setShowSettings(true)}
+          title="Settings"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
 
       {/* Branding */}
       <div className="branding">
@@ -99,36 +96,19 @@ const NewTab: React.FC = () => {
           </div>
         )}
 
-        {/* Main Content */}
-        {!isConfigured ? (
-          <div className="setup-container">
-            <h1 className="setup-title">Welcome!</h1>
-            <p className="setup-description">
-              Connect your Jira to see your in-progress tickets
-            </p>
-            <JiraSettings 
-              isConfigured={false} 
-              onSave={handleSettingsSave}
-            />
-            {/* Calendar connect option even without Jira */}
-            <CalendarEvents
-              events={calendarEvents}
-              loading={calendarLoading}
-              error={calendarError || undefined}
-              isAuthenticated={calendarConnected}
-              onConnect={connectCalendar}
-            />
-          </div>
-        ) : (
-          !showSettings && (
-            <div className="content-panels">
+        {/* Main Content — panels only for connected services. Setup happens in the Settings modal. */}
+        {!showSettings && (isConfigured || calendarConnected) && (
+          <div className="content-panels">
+            {isConfigured && (
               <div className="tickets-container">
-                <JiraTickets 
-                  tickets={tickets} 
-                  loading={loading} 
+                <JiraTickets
+                  tickets={tickets}
+                  loading={loading}
                   error={error || undefined}
                 />
               </div>
+            )}
+            {calendarConnected && (
               <div className="calendar-container">
                 <CalendarEvents
                   events={calendarEvents}
@@ -138,8 +118,8 @@ const NewTab: React.FC = () => {
                   onConnect={connectCalendar}
                 />
               </div>
-            </div>
-          )
+            )}
+          </div>
         )}
       </div>
     </div>

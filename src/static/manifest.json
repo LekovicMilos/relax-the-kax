@@ -17,7 +17,8 @@
     "https://*.atlassian.com/*",
     "https://*.jira.com/*",
     "https://picsum.photos/*",
-    "https://www.googleapis.com/*"
+    "https://www.googleapis.com/*",
+    "https://oauth2.googleapis.com/*"
   ],
   "oauth2": {
     "client_id": "9481733180-49l235ujg3ifn6dvtumvjl6n8kl29296.apps.googleusercontent.com",
