@@ -1,0 +1,58 @@
+/* Accent overrides for Trello / Notion / Linear panels.
+   Base styling is shared with Jira tickets (JiraTickets.css). */
+
+.task-section-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Trello accent (blue) */
+.task-section-trello {
+  background: linear-gradient(135deg, rgba(0, 121, 191, 0.18) 0%, rgba(0, 121, 191, 0.1) 100%);
+  border-color: rgba(0, 121, 191, 0.35);
+  box-shadow: 0 4px 24px rgba(0, 121, 191, 0.15);
+}
+.task-count-trello {
+  background: rgba(0, 121, 191, 0.3);
+  color: #9ad3f5;
+}
+.task-ticket-card-trello {
+  border-left-color: #0079bf;
+}
+.task-ticket-card-trello:hover {
+  border-color: rgba(0, 121, 191, 0.5);
+}
+
+/* Notion accent (neutral) */
+.task-section-notion {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.task-count-notion {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+}
+.task-ticket-card-notion {
+  border-left-color: rgba(255, 255, 255, 0.6);
+}
+.task-ticket-card-notion:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Linear accent (indigo) */
+.task-section-linear {
+  background: linear-gradient(135deg, rgba(94, 106, 210, 0.2) 0%, rgba(94, 106, 210, 0.1) 100%);
+  border-color: rgba(94, 106, 210, 0.35);
+  box-shadow: 0 4px 24px rgba(94, 106, 210, 0.15);
+}
+.task-count-linear {
+  background: rgba(94, 106, 210, 0.35);
+  color: #c2c8f5;
+}
+.task-ticket-card-linear {
+  border-left-color: #5e6ad2;
+}
+.task-ticket-card-linear:hover {
+  border-color: rgba(94, 106, 210, 0.5);
+}

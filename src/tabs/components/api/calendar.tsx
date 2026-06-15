@@ -50,19 +50,39 @@ interface GoogleCalendarEvent {
 // ============================================
 
 /**
+ * Get OAuth2 token from Chrome Identity API, capturing any error message.
+ */
+const getAuthTokenDetailed = (
+  interactive: boolean = false
+): Promise<{ token: string | null; error?: string }> => {
+  return new Promise((resolve) => {
+    if (!chrome.identity?.getAuthToken) {
+      resolve({ token: null, error: "Chrome identity API is unavailable" });
+      return;
+    }
+    try {
+      chrome.identity.getAuthToken({ interactive }, (token) => {
+        if (chrome.runtime.lastError) {
+          resolve({ token: null, error: chrome.runtime.lastError.message });
+        } else {
+          resolve({ token: token || null });
+        }
+      });
+    } catch (e) {
+      resolve({
+        token: null,
+        error: e instanceof Error ? e.message : "Failed to start Google sign-in",
+      });
+    }
+  });
+};
+
+/**
  * Get OAuth2 token from Chrome Identity API
  */
-const getAuthToken = (interactive: boolean = false): Promise<string | null> => {
-  return new Promise((resolve) => {
-    chrome.identity.getAuthToken({ interactive }, (token) => {
-      if (chrome.runtime.lastError) {
-        // Silent fail - don't log sensitive auth errors
-        resolve(null);
-      } else {
-        resolve(token || null);
-      }
-    });
-  });
+const getAuthToken = async (interactive: boolean = false): Promise<string | null> => {
+  const { token } = await getAuthTokenDetailed(interactive);
+  return token;
 };
 
 /**
@@ -123,11 +143,16 @@ export const isGoogleAuthenticated = async (): Promise<boolean> => {
 };
 
 /**
- * Authenticate with Google (shows consent screen if needed)
+ * Authenticate with Google (shows consent screen if needed).
+ * Returns the underlying error message when the sign-in could not complete,
+ * so the UI can tell the user what went wrong instead of failing silently.
  */
-export const authenticateGoogle = async (): Promise<boolean> => {
-  const token = await getAuthToken(true);
-  return token !== null;
+export const authenticateGoogle = async (): Promise<{
+  success: boolean;
+  error?: string;
+}> => {
+  const { token, error } = await getAuthTokenDetailed(true);
+  return { success: token !== null, error };
 };
 
 /**

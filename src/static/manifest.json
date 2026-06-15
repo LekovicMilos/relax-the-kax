@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Relax the Kax",
-  "description": "New tab extension with Jira and Google Calendar integration",
-  "version": "1.0.9",
+  "description": "New tab extension with Jira, GitHub, GitLab, Trello, Notion, Linear and Google Calendar integration",
+  "version": "1.0.10",
   "action": {
     "default_popup": "popup.html",
     "default_title": "Relax the Kax",
@@ -18,7 +18,12 @@
     "https://*.jira.com/*",
     "https://picsum.photos/*",
     "https://www.googleapis.com/*",
-    "https://oauth2.googleapis.com/*"
+    "https://oauth2.googleapis.com/*",
+    "https://api.github.com/*",
+    "https://gitlab.com/*",
+    "https://api.trello.com/*",
+    "https://api.notion.com/*",
+    "https://api.linear.app/*"
   ],
   "oauth2": {
     "client_id": "9481733180-49l235ujg3ifn6dvtumvjl6n8kl29296.apps.googleusercontent.com",

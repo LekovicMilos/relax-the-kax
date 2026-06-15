@@ -1,0 +1,48 @@
+/* Accent overrides for GitHub / GitLab item panels.
+   Base styling is shared with Jira tickets (JiraTickets.css). */
+
+.git-section-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* GitHub accent (neutral / purple) */
+.git-section-github {
+  background: linear-gradient(135deg, rgba(139, 148, 158, 0.15) 0%, rgba(110, 84, 194, 0.12) 100%);
+  border-color: rgba(139, 148, 158, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.git-count-github {
+  background: rgba(139, 148, 158, 0.3);
+  color: #e6edf3;
+}
+
+.git-ticket-card-github {
+  border-left-color: #8b949e;
+}
+
+.git-ticket-card-github:hover {
+  border-color: rgba(139, 148, 158, 0.5);
+}
+
+/* GitLab accent (orange) */
+.git-section-gitlab {
+  background: linear-gradient(135deg, rgba(252, 109, 38, 0.15) 0%, rgba(226, 67, 41, 0.1) 100%);
+  border-color: rgba(252, 109, 38, 0.3);
+  box-shadow: 0 4px 24px rgba(252, 109, 38, 0.15);
+}
+
+.git-count-gitlab {
+  background: rgba(252, 109, 38, 0.3);
+  color: #fcb38a;
+}
+
+.git-ticket-card-gitlab {
+  border-left-color: #fc6d26;
+}
+
+.git-ticket-card-gitlab:hover {
+  border-color: rgba(252, 109, 38, 0.5);
+}

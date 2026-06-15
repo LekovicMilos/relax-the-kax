@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(yarn build 2>&1)"
+    ]
+  }
+}

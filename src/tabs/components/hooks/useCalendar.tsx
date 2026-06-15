@@ -54,12 +54,16 @@ function useCalendar(): UseCalendarReturn {
     setError(null);
 
     try {
-      const success = await authenticateGoogle();
+      const { success, error: authError } = await authenticateGoogle();
       if (success) {
         setIsAuthenticated(true);
         await fetchData();
       } else {
-        setError("Failed to connect to Google Calendar");
+        setError(
+          authError
+            ? `Couldn't connect: ${authError}`
+            : "Failed to connect to Google Calendar"
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Connection failed");
